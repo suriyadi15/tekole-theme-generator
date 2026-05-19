@@ -30,7 +30,7 @@ Required blocks are blocks that should always be present. The builder treats the
 ### engagement
 
 - Required: `hero`, `events`, `footer`
-- Allowed: `hero`, `couple`, `events`, `gallery`, `maps`, `rsvp`, `video`, `dresscode`, `quotes`, `countdown`, `comment`, `footer`
+- Allowed: `hero`, `events`, `gallery`, `maps`, `rsvp`, `donation`, `gift`, `video`, `quotes`, `countdown`, `comment`, `footer`, `couple`, `dresscode`
 
 ### anniversary
 
@@ -50,7 +50,7 @@ Required blocks are blocks that should always be present. The builder treats the
 ### sunatan
 
 - Required: `hero`, `events`, `footer`
-- Allowed: `hero`, `celebrant`, `events`, `gallery`, `maps`, `rsvp`, `video`, `dresscode`, `quotes`, `countdown`, `comment`, `footer`
+- Allowed: `hero`, `events`, `gallery`, `maps`, `rsvp`, `donation`, `gift`, `video`, `quotes`, `countdown`, `comment`, `footer`, `celebrant`, `dresscode`
 
 ### wisuda
 
@@ -60,7 +60,7 @@ Required blocks are blocks that should always be present. The builder treats the
 ### party
 
 - Required: `hero`, `events`, `footer`
-- Allowed: `hero`, `host`, `events`, `gallery`, `maps`, `rsvp`, `video`, `dresscode`, `quotes`, `countdown`, `comment`, `footer`
+- Allowed: `hero`, `events`, `gallery`, `maps`, `rsvp`, `donation`, `gift`, `video`, `quotes`, `countdown`, `comment`, `footer`, `host`, `dresscode`
 
 ## Block Types
 

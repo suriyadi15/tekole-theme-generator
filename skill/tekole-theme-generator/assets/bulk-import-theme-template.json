@@ -1,10 +1,9 @@
 [
   {
     "name": "Portable Wedding Garden 01",
-    "description": "Tema wedding garden elegan. Ganti REPLACE_WITH_MEDIA_UUID untuk thumbnail, dan REPLACE_WITH_MEDIA_UUID_OR_URL untuk media lain sebelum import.",
+    "description": "Template tema wedding garden elegan. Ganti REPLACE_WITH_MEDIA_UUID_OR_URL untuk media sebelum real import/render, atau hapus field media opsional.",
     "type": "wedding",
     "status": "draft",
-    "thumbnailId": "REPLACE_WITH_MEDIA_UUID",
     "styles": {
       "typography": {
         "fontHeading": "Playfair Display",

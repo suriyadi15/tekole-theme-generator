@@ -10,21 +10,26 @@ Use this before returning generated or repaired theme JSON.
 - Each theme has `name`, `type`, `ornaments`, `blocks`, and `content`.
 - `name` is 1-255 chars and likely unique in the target app.
 - `status` is omitted or one of `draft`, `published`, `archived`.
-- Do not include DB-managed fields: `id`, `createdBy`, `createdAt`, `updatedAt`.
+- Do not include theme-level DB-managed fields: `id`, `createdBy`, `createdAt`, `updatedAt`.
+- Do include required nested IDs: blocks, ornaments, navigation items, events, celebrants, hosts, love story items, gallery items, video items, and dresscode colors.
+- Nested IDs are non-empty stable strings, unique within their array scope, max 120 chars, safe chars `[A-Za-z0-9._:-]`.
+- Static JSON should satisfy `assets/theme.schema.json`; semantic validation should satisfy `bin/validate-theme.js`.
 
 ## Media
 
-- `thumbnailId` is omitted/undefined or a UUID media ID from the target app; direct URLs are not supported for `thumbnailId`.
+- `thumbnailId` is omitted/undefined or a UUID media ID from the target app; direct URLs and placeholders are not supported for real import thumbnails.
 - `imageId`, `backgroundImageId`, and `audioId` are media refs: UUID media IDs from the target app or direct `http(s)` URLs.
-- If unknown, use clear placeholders: `REPLACE_WITH_MEDIA_UUID` for `thumbnailId`, and `REPLACE_WITH_MEDIA_UUID_OR_URL` for render media.
-- Direct image/audio URLs must be absolute `http://` or `https://` URLs.
+- For import-ready JSON, omit unknown optional media fields instead of using placeholders.
+- For template JSON only, placeholders like `REPLACE_WITH_MEDIA_UUID_OR_URL` are allowed if clearly explained and validated with `--allow-placeholders`.
+- Direct image/audio URLs must be absolute `http://` or `https://` URLs, public, persistent, and not local/relative/data/blob/private URLs.
 
 ## Event Type and Blocks
 
 - `type` is one of the event types.
 - Blocks are allowed for the selected event type.
 - Required blocks are present: `hero`, `events`, `footer`.
-- `blocks[].id` values are unique and stable.
+- `blocks[].id` values are present, unique, stable, and safe for anchors.
+- Each array of nested objects with `id` has unique IDs in that array scope.
 - `blocks[].order` values are numeric and sorted intentionally.
 - `blocks[].type` matches the shape of `blocks[].content`.
 - `blocks[].visibility` is `always`, `public_only`, or `guests_only`.
@@ -42,17 +47,20 @@ Use this before returning generated or repaired theme JSON.
 - `content.events` is present and non-empty.
 - Exactly one event should usually have `isPrimary: true`.
 - Every event has `id`, `title`, `fromDate`, `toDate`, and `isPrimary`.
-- Dates are ISO strings.
+- Event dates are ISO datetime strings with timezone.
+- Date-only fields such as `birthDate` and love story `date` use `YYYY-MM-DD`.
 - `maps.content.linkedEventId` matches an existing event ID.
 - `countdown.content.linkedEventId` matches an existing event ID.
 - If `useGlobalLocation` is true, `content.globalLocation` is present.
-- Direction buttons need `latLong`.
+- Direction buttons need `latLong` in `lat,lng` format with valid coordinate ranges.
 
 ## Person Content
 
 - For `wedding`, `engagement`, `anniversary`: include `content.couple` when using `couple` block.
-- For `birthday`, `aqiqah`, `sunatan`, `wisuda`: include `content.celebrant` when using `celebrant` block.
-- For `party`: include `content.host` when using `host` block.
+- For `birthday`, `aqiqah`, `sunatan`, `wisuda`: include `content.celebrant` as `CelebrantPerson[]` when using `celebrant` block; reject single objects.
+- Every item in `content.celebrant[]` must include a non-empty string `id`, for example `"celebrant-1"`; reject output if any celebrant item has no `id`.
+- Each `CelebrantPerson` has `fullName`, `nickname`, and `sosmed`; do not use unsupported `age`, use `birthDate` for age rendering.
+- For `party`: include `content.host` as `HostPerson[]` when using `host` block; reject single objects.
 - Social platform values are valid.
 
 ## Styles

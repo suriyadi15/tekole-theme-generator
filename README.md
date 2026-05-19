@@ -2,7 +2,7 @@
 
 Portable installer for the Tekole/Bahagiaku theme generator skill.
 
-The skill helps AI agents generate, repair, validate, and explain theme JSON for admin `/bulk-import`.
+The skill helps AI agents generate, repair, validate, and explain theme JSON for admin `/bulk-import`. It includes a portable JSON Schema and dependency-free validator for Bahagiaku theme builder contracts.
 
 ## Install
 
@@ -107,6 +107,20 @@ or:
 ```text
 Pakai skill tekole-theme-generator untuk validasi JSON tema ini.
 ```
+
+## Validate Theme JSON
+
+```bash
+node bin/validate-theme.js skill/tekole-theme-generator/assets/bulk-import-theme-template.json --allow-placeholders
+```
+
+or:
+
+```bash
+npm run validate:template
+```
+
+Use `--allow-placeholders` only for reusable templates. Import-ready JSON should omit unknown optional media fields or use real target-app UUIDs/public `http(s)` URLs.
 
 ## Requirements
 

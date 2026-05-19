@@ -4,7 +4,11 @@
   "description": "Installer for the Tekole/Bahagiaku theme generator skill for Codex, Claude, and generic agents.",
   "type": "module",
   "bin": {
-    "tekole-theme-generator": "bin/install.js"
+    "tekole-theme-generator": "bin/install.js",
+    "tekole-theme-validate": "bin/validate-theme.js"
+  },
+  "scripts": {
+    "validate:template": "node bin/validate-theme.js skill/tekole-theme-generator/assets/bulk-import-theme-template.json --allow-placeholders"
   },
   "files": [
     "bin",

@@ -202,8 +202,9 @@ Uses `block.content` and `theme.content.couple`.
 
 ### celebrant
 
-Uses `block.content` and `theme.content.celebrant`.
+Uses `block.content` and `theme.content.celebrant[]`.
 
+- `theme.content.celebrant` is always an array, even for one person.
 - `caption` renders as heading/caption above list.
 - `layout` controls centered/card/split presentation.
 - `showAge` derives age from `birthDate`.
@@ -213,8 +214,9 @@ Uses `block.content` and `theme.content.celebrant`.
 
 ### host
 
-Uses `block.content` and `theme.content.host`.
+Uses `block.content` and `theme.content.host[]`.
 
+- `theme.content.host` is always an array, even for one host.
 - `layout` controls centered/card/list presentation.
 - `showDescription` toggles host descriptions.
 - Host `title`, `name`, and `imageId` render if provided.

@@ -15,14 +15,22 @@ Required by import validation:
 Optional:
 
 - `description?: string`
-- `thumbnailId?: string` - target-app media UUID only; omit when unavailable. Direct URLs are not supported for thumbnails.
+- `thumbnailId?: string` - target-app media UUID only; omit when unavailable. Direct URLs and placeholders are not supported for real import thumbnails.
 - `status?: "draft" | "published" | "archived"` - defaults to `draft`.
 - `styles?: ThemeStyle`
 - `openingConfig?: OpeningConfig`
 - `navigationConfig?: NavigationConfig`
 - `sound?: { audioId?: string }`
 
-Do not include DB-managed fields in import JSON: `id`, `createdBy`, `createdAt`, `updatedAt`.
+Do not include theme-level DB-managed fields in import JSON: `id`, `createdBy`, `createdAt`, `updatedAt`. This does not apply to nested IDs: `blocks[].id`, `ornaments[].id`, `navigationConfig.items[].id`, `content.events[].id`, `content.celebrant[].id`, `content.host[].id`, and item IDs inside block content are required when their objects are present.
+
+## Machine-Readable Schema
+
+Use `assets/theme.schema.json` as the portable JSON Schema for static validation. Use `bin/validate-theme.js` for semantic checks such as unique IDs, allowed blocks per event type, linked event IDs, and media placeholder policy.
+
+## ID Rules
+
+Nested IDs are stable UI/render identifiers, not database IDs. Use non-empty strings up to 120 chars with safe characters `[A-Za-z0-9._:-]`, for example `block-hero`, `event-akad`, `nav-events`, `celebrant-1`, `gallery-1`. IDs must be unique inside their array scope. Block IDs must be globally unique within `blocks[]` because navigation and anchors reference them.
 
 ## ThemeStyle
 
@@ -139,7 +147,9 @@ Fields:
 
 ## MediaRef
 
-Media fields except `thumbnailId` use a string `MediaRef`: either a media UUID from the target app or an absolute direct `http://` or `https://` URL. When a UUID is used, the target app resolves it through `/api/media/{id}`; when a direct URL is used, the URL is used as-is. `thumbnailId` is UUID-only or omitted.
+Media fields except `thumbnailId` use a string `MediaRef`: either a media UUID from the target app or an absolute direct `http://` or `https://` URL. When a UUID is used, the target app resolves it through `/api/media/{id}`; when a direct URL is used, the target app proxies/redirects through `/api/media/{encodedUrl}`. `thumbnailId` is UUID-only or omitted.
+
+Direct media URLs must be public and persistent. Do not use local paths, relative paths, `data:` URLs, `blob:` URLs, or private/authenticated URLs. For generated import-ready JSON, omit unknown optional media fields instead of inserting placeholders. Use placeholders only for template output and clearly mark that they must be replaced before real import/render.
 
 ## Sound
 
@@ -313,6 +323,23 @@ Global content shared by blocks.
     },
     "person2": {}
   },
+  "celebrant": [
+    {
+      "id": "celebrant-1",
+      "fullName": "Santika Rahayu",
+      "nickname": "Santika",
+      "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
+      "birthDate": "1996-03-15",
+      "sosmed": []
+    }
+  ],
+  "host": [
+    {
+      "id": "host-1",
+      "name": "Keluarga Besar",
+      "title": "Tuan Rumah"
+    }
+  ],
   "events": []
 }
 ```
@@ -320,8 +347,8 @@ Global content shared by blocks.
 Fields:
 
 - `couple?: { person1?: CouplePerson, person2?: CouplePerson }` - used by wedding, engagement, anniversary.
-- `celebrant?: CelebrantPerson[]` - used by birthday, aqiqah, sunatan, wisuda.
-- `host?: HostPerson[]` - used by party/gathering.
+- `celebrant?: CelebrantPerson[]` - used by birthday, aqiqah, sunatan, wisuda. Always an array, even for one person.
+- `host?: HostPerson[]` - used by party/gathering. Always an array, even for one host.
 - `events: EventItem[]` - required for all event types.
 - `globalLocation?: EventLocation`
 
@@ -337,11 +364,11 @@ Fields:
 
 `CelebrantPerson`:
 
-- `id: string`
+- `id: string` - required non-empty stable item ID, for example `"celebrant-1"`.
 - `fullName: string`
 - `nickname: string`
 - `imageId?: string`
-- `birthDate?: string` - ISO date string.
+- `birthDate?: string` - date-only string `YYYY-MM-DD`.
 - `fatherName?: string`
 - `motherName?: string`
 - `sosmed: PersonSosmed[]`
@@ -364,7 +391,7 @@ Fields:
 
 - `locationName?: string`
 - `address?: string`
-- `latLong?: string` - example `"-6.210357,106.852341"`.
+- `latLong?: string` - `lat,lng` decimal coordinates, latitude -90..90 and longitude -180..180, for example `"-6.210357,106.852341"`.
 - `city?: string`
 
 `EventItem`:
@@ -372,8 +399,8 @@ Fields:
 - `id: string`
 - `title: string`
 - `description?: string`
-- `fromDate: string` - ISO datetime string.
-- `toDate: string` - ISO datetime string.
+- `fromDate: string` - ISO datetime string with timezone, for example `2026-06-20T09:00:00.000Z`.
+- `toDate: string` - ISO datetime string with timezone, for example `2026-06-20T11:00:00.000Z`.
 - `isPrimary: boolean`
 - `useGlobalLocation?: boolean`
 - `location?: EventLocation`
@@ -426,7 +453,7 @@ Any block or content field named `imageId`, `backgroundImageId`, or `audioId` us
 `LoveStoryItem`:
 
 - `id: string`
-- `date: string` - ISO date string.
+- `date: string` - date-only string `YYYY-MM-DD`.
 - `title: string`
 - `description: string`
 - `imageId?: string`
@@ -495,7 +522,7 @@ Do not include gift items in theme JSON.
 
 - `id: string`
 - `title: string`
-- `youtubeUrl: string`
+- `youtubeUrl: string` - absolute YouTube URL from `youtube.com` or `youtu.be`.
 
 ### dresscode
 
@@ -508,7 +535,7 @@ Do not include gift items in theme JSON.
 `DresscodeColor`:
 
 - `id: string`
-- `colorHex: string`
+- `colorHex: string` - hex color string such as `#D4AF37`.
 - `label: string`
 
 ### quotes
