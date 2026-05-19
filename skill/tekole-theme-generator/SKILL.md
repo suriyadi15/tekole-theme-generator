@@ -14,11 +14,11 @@ This skill creates portable Tekole/Bahagiaku theme JSON that can be uploaded thr
    - Visual direction: palette, typography mood, ornament style, layout density, opening screen mood.
    - Blocks to include, but only use blocks allowed for the event type.
    - Media refs available as target-app UUIDs or direct URLs.
-2. Read the relevant bundled references:
-   - Always read `references/theme-json-contract.md` before generating JSON.
-   - Read `references/enums.md` when choosing event type, blocks, layout, animation, navigation, or ornament values.
-   - Read `references/render-behavior.md` when explaining how fields affect rendering or when choosing content/layout.
-   - Read `references/validation-checklist.md` before final output.
+2. Consult the reference sections in this skill:
+   - **JSON Contract** — always review before generating any JSON.
+   - **Enums** — when choosing event type, blocks, layout, animation, navigation, or ornament values.
+   - **Render Behavior** — when explaining how fields affect rendering or choosing content/layout.
+   - **Validation Checklist** — run mentally before final output.
 3. Generate valid JSON:
    - Output either one object or an array of up to 50 theme objects.
    - Include all import-required fields: `name`, `type`, `ornaments`, `blocks`, and `content`.

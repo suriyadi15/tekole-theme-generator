@@ -17,7 +17,7 @@ const rootDir = path.resolve(__dirname, "..")
 const sourcePaths = {
   codex: path.join(rootDir, "skill", PACKAGE_NAME),
   generic: path.join(rootDir, "skill", PACKAGE_NAME),
-  claude: path.join(rootDir, "adapters", "claude", `${PACKAGE_NAME}.md`),
+  claude: path.join(rootDir, "skill", PACKAGE_NAME),
 }
 
 function parseArgs(argv) {
@@ -62,7 +62,7 @@ function parseArgs(argv) {
 }
 
 function selectedAgents(agent) {
-  if (agent === "all") return ["codex", "claude", "generic"]
+  if (agent === "all") return ["codex", "claude"]
   return [agent]
 }
 
@@ -91,7 +91,7 @@ function targetPath(agent, options, agents) {
 function validateSource(agent) {
   const source = sourcePaths[agent]
   if (!fs.existsSync(source)) fail(`Missing installer source: ${source}`)
-  if (agent !== "claude" && !fs.existsSync(path.join(source, "SKILL.md"))) {
+  if (!fs.existsSync(path.join(source, "SKILL.md"))) {
     fail(`Missing SKILL.md in source: ${source}`)
   }
 }
@@ -104,39 +104,29 @@ function validateDeleteTarget(target) {
   }
 }
 
-function timestamp() {
-  const d = new Date()
-  const pad = (n) => String(n).padStart(2, "0")
-  return [
-    d.getFullYear(),
-    pad(d.getMonth() + 1),
-    pad(d.getDate()),
-    "-",
-    pad(d.getHours()),
-    pad(d.getMinutes()),
-    pad(d.getSeconds()),
-  ].join("")
-}
-
-function backupExisting(target, dryRun) {
-  if (!fs.existsSync(target)) return undefined
-  const parent = path.dirname(target)
-  const backup = path.join(parent, `${path.basename(target)}.backup-${timestamp()}`)
-  log(`Backup: ${target} -> ${backup}`)
-  if (!dryRun) fs.renameSync(target, backup)
-  return backup
-}
-
 function copySource(agent, source, target, dryRun) {
   log(`Install ${agent}: ${source} -> ${target}`)
   if (dryRun) return
   fs.mkdirSync(path.dirname(target), { recursive: true })
-  const stat = fs.statSync(source)
-  if (stat.isDirectory()) {
-    fs.cpSync(source, target, { recursive: true })
-  } else {
-    fs.copyFileSync(source, target)
+  fs.cpSync(source, target, { recursive: true })
+}
+
+function buildClaudeContent(skillDir) {
+  const parts = [fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8")]
+  const refsDir = path.join(skillDir, "references")
+  if (fs.existsSync(refsDir)) {
+    for (const f of fs.readdirSync(refsDir).sort()) {
+      parts.push(fs.readFileSync(path.join(refsDir, f), "utf8"))
+    }
   }
+  return parts.join("\n\n---\n\n")
+}
+
+function installClaude(skillDir, target, dryRun) {
+  log(`Install claude: ${skillDir} -> ${target} (combined)`)
+  if (dryRun) return
+  fs.mkdirSync(path.dirname(target), { recursive: true })
+  fs.writeFileSync(target, buildClaudeContent(skillDir), "utf8")
 }
 
 function installOne(agent, command, options, agents) {
@@ -144,16 +134,25 @@ function installOne(agent, command, options, agents) {
   const source = sourcePaths[agent]
   const target = targetPath(agent, options, agents)
   const exists = fs.existsSync(target)
-  const shouldOverwrite = command === "update" || options.force
 
-  if (exists && !shouldOverwrite) {
-    log(`Skip ${agent}: already installed at ${target}`)
-    log(`Use "update" or "--force" to overwrite.`)
-    return
+  if (command === "update") {
+    if (!exists) {
+      log(`Skip ${agent}: not installed at ${target}`)
+      return
+    }
+  } else {
+    if (exists && !options.force) {
+      log(`Skip ${agent}: already installed at ${target}`)
+      log(`Use "update" or "--force" to overwrite.`)
+      return
+    }
   }
 
-  if (exists) backupExisting(target, options.dryRun)
-  copySource(agent, source, target, options.dryRun)
+  if (agent === "claude") {
+    installClaude(source, target, options.dryRun)
+  } else {
+    copySource(agent, source, target, options.dryRun)
+  }
 }
 
 function uninstallOne(agent, options, agents) {
@@ -189,10 +188,11 @@ Options:
   --dry-run        Print actions without changing files
   --help           Show this help
 
-Default install paths:
+Default install paths (--agent all installs codex + claude only):
   Codex:   $CODEX_HOME/skills/tekole-theme-generator or ~/.codex/skills/tekole-theme-generator
   Claude:  $CLAUDE_HOME/skills/tekole-theme-generator.md or ~/.claude/skills/tekole-theme-generator.md
   Generic: $AGENTS_HOME/skills/tekole-theme-generator or ~/.agents/skills/tekole-theme-generator
+           (excluded from "all" to prevent duplicate skill listings — use --agent generic explicitly)
 `)
 }
 
