@@ -1,7 +1,7 @@
 [
   {
     "name": "Portable Wedding Garden 01",
-    "description": "Tema wedding garden elegan. Ganti semua REPLACE_WITH_MEDIA_UUID dengan UUID media dari aplikasi tujuan sebelum import.",
+    "description": "Tema wedding garden elegan. Ganti REPLACE_WITH_MEDIA_UUID untuk thumbnail, dan REPLACE_WITH_MEDIA_UUID_OR_URL untuk media lain sebelum import.",
     "type": "wedding",
     "status": "draft",
     "thumbnailId": "REPLACE_WITH_MEDIA_UUID",
@@ -38,7 +38,7 @@
       "borderRadius": 0.75
     },
     "openingConfig": {
-      "backgroundImageId": "REPLACE_WITH_MEDIA_UUID",
+      "backgroundImageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
       "overlayColor": "#2F241C",
       "overlayOpacity": 0.48,
       "eventLabel": "Undangan Pernikahan",
@@ -81,13 +81,13 @@
       ]
     },
     "sound": {
-      "audioId": "REPLACE_WITH_AUDIO_MEDIA_UUID"
+      "audioId": "REPLACE_WITH_AUDIO_MEDIA_UUID_OR_URL"
     },
     "ornaments": [
       {
         "id": "orn-global-top-left",
         "isVisible": true,
-        "imageId": "REPLACE_WITH_MEDIA_UUID",
+        "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
         "positionMode": "fixed",
         "positionPreset": "top-left",
         "positionX": "0px",
@@ -113,7 +113,7 @@
         "isVisible": true,
         "visibility": "always",
         "content": {
-          "imageId": "REPLACE_WITH_MEDIA_UUID",
+          "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
           "title": "Budi & Sari",
           "description": "Dengan penuh rasa syukur, kami mengundang Anda untuk hadir di hari bahagia kami.",
           "showEventDate": true,
@@ -136,7 +136,7 @@
           "paddingTop": 96,
           "paddingBottom": 96,
           "paddingX": 24,
-          "backgroundImageId": "REPLACE_WITH_MEDIA_UUID",
+          "backgroundImageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
           "backgroundColor": null,
           "backgroundOverlayColor": "#000000",
           "backgroundOverlayOpacity": 0.35,
@@ -240,12 +240,12 @@
           "items": [
             {
               "id": "gallery-1",
-              "imageId": "REPLACE_WITH_MEDIA_UUID",
+              "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
               "caption": "Momen pertama"
             },
             {
               "id": "gallery-2",
-              "imageId": "REPLACE_WITH_MEDIA_UUID",
+              "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
               "caption": "Hari bahagia"
             }
           ]
@@ -318,7 +318,7 @@
               "url": "https://instagram.com/example"
             }
           ],
-          "backgroundImageId": "REPLACE_WITH_MEDIA_UUID"
+          "backgroundImageId": "REPLACE_WITH_MEDIA_UUID_OR_URL"
         },
         "containerConfig": {
           "width": "full",
@@ -336,7 +336,7 @@
         "person1": {
           "fullName": "Budi Santoso",
           "nickname": "Budi",
-          "imageId": "REPLACE_WITH_MEDIA_UUID",
+          "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
           "fatherName": "Bapak Santoso",
           "motherName": "Ibu Rahayu",
           "childOrder": 1,
@@ -351,7 +351,7 @@
         "person2": {
           "fullName": "Sari Dewi",
           "nickname": "Sari",
-          "imageId": "REPLACE_WITH_MEDIA_UUID",
+          "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
           "fatherName": "Bapak Purwanto",
           "motherName": "Ibu Siti",
           "childOrder": 2,

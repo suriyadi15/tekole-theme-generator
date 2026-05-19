@@ -30,6 +30,10 @@ The renderer receives a `ThemeInvitationStore`:
 
 If `styles` is missing, a fallback style is used. For import quality, include full `styles`.
 
+## Media Refs
+
+Media fields such as `imageId`, `backgroundImageId`, and `audioId` accept either a target-app media UUID or a direct `http(s)` URL. UUID refs resolve through `/api/media/{id}`; direct URLs are used as-is. `thumbnailId` is UUID-only or omitted.
+
 ## Global Style Variables
 
 `styles.colors` becomes:
@@ -126,7 +130,7 @@ Use token names for theme-aware overrides, or explicit hex/CSS when needed.
 - `paddingTop`, `paddingBottom`, `paddingX` are px.
 - `minHeight` sets minimum inner container height.
 - `backgroundColor` applies container background.
-- `backgroundImageId` renders an absolutely positioned background image from `/api/media/{backgroundImageId}`.
+- `backgroundImageId` renders an absolutely positioned background image from its media ref.
 - `backgroundOverlayColor` and `backgroundOverlayOpacity` render an overlay above the image/background.
 
 ## Opening Screen
@@ -134,7 +138,7 @@ Use token names for theme-aware overrides, or explicit hex/CSS when needed.
 Rendered only when `openingConfig` exists.
 
 - Locks document scroll while visible.
-- `backgroundImageId` renders from `/api/media/{id}`.
+- `backgroundImageId` renders from its media ref.
 - `animation.backgroundEffect` maps to background animation classes.
 - `overlayColor` and `overlayOpacity` render a full-screen overlay.
 - `eventLabel`, `title`, `subtitle`, guest name, `guestNote`, and `buttonText` render centered.
@@ -157,7 +161,7 @@ Rendered only when `navigationConfig.isEnabled` is true and `items.length > 0`.
 
 Rendered only when `sound.audioId` exists.
 
-- Audio source is `/api/media/{audioId}`.
+- Audio source uses the `audioId` media ref.
 - It loops and attempts autoplay with fade-in.
 - A fixed play/pause button appears near bottom right.
 - Audio is muted when page/tab loses active focus.
@@ -172,7 +176,7 @@ Global ornaments render under the root. Block ornaments render inside the block 
 - `positionX`/`positionY`, `rotation`, `flipX`, and `flipY` become CSS transform.
 - `zLayer: "above"` gives z-index 10; `"below"` gives z-index -1.
 - `animation`, `animationOrigin`, `speed`, and `delay` map to ornament animation CSS variables.
-- Images render from `/api/media/{imageId}`.
+- Images render from their `imageId` media refs.
 
 ## Block-Specific Behavior
 
@@ -180,7 +184,7 @@ Global ornaments render under the root. Block ornaments render inside the block 
 
 Uses `block.content` and `theme.content.events`.
 
-- `imageId` renders as full background image from `/api/media/{id}`.
+- `imageId` renders as full background image from its media ref.
 - `title` and `description` render as hero text.
 - `showEventDate` shows primary event date. Primary event is `events.find(isPrimary)` or first event.
 - `showCountdown` shows a simple days-left badge to primary/first event.
@@ -241,7 +245,7 @@ Uses `block.content`, `theme.content.events`, and global/effective location.
 Uses only `block.content`.
 
 - Filters items without `imageId`.
-- Images render from `/api/media/{imageId}`.
+- Images render from their `imageId` media refs.
 - `layout: "grid"` renders responsive grid.
 - `layout: "masonry"` renders masonry style.
 - `layout: "slider"` renders an auto-advancing slider.
@@ -336,7 +340,7 @@ Uses `block.content` and public comment APIs at runtime.
 
 Uses only `block.content`.
 
-- Renders optional `backgroundImageId` as background from `/api/media/{id}`.
+- Renders optional `backgroundImageId` as background from its media ref.
 - If background image exists, foreground text uses `textInvert`.
 - `text` supports line breaks.
 - `showSosmed` and `sosmedLinks` render social links.

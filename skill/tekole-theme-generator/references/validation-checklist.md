@@ -14,9 +14,10 @@ Use this before returning generated or repaired theme JSON.
 
 ## Media
 
-- `thumbnailId`, `imageId`, `backgroundImageId`, and `audioId` are UUID media IDs from the target app.
-- If unknown, use clear placeholders like `REPLACE_WITH_MEDIA_UUID`.
-- Do not use direct image/audio URLs unless the target app has been changed to support them.
+- `thumbnailId` is omitted/undefined or a UUID media ID from the target app; direct URLs are not supported for `thumbnailId`.
+- `imageId`, `backgroundImageId`, and `audioId` are media refs: UUID media IDs from the target app or direct `http(s)` URLs.
+- If unknown, use clear placeholders: `REPLACE_WITH_MEDIA_UUID` for `thumbnailId`, and `REPLACE_WITH_MEDIA_UUID_OR_URL` for render media.
+- Direct image/audio URLs must be absolute `http://` or `https://` URLs.
 
 ## Event Type and Blocks
 
@@ -70,7 +71,7 @@ Use this before returning generated or repaired theme JSON.
 - `host`: descriptions exist if `showDescription` is true.
 - `loveStory`: items have ISO dates and meaningful titles.
 - `events`: buttons align with location data.
-- `gallery`: items with images have valid media IDs; `aspectRatio` and `objectFit` are valid.
+- `gallery`: items with images have valid media refs; `aspectRatio` and `objectFit` are valid.
 - `maps`: linked event has usable location.
 - `rsvp`: only title/description in JSON.
 - `donation`: only display fields in JSON; no account data.

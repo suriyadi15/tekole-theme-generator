@@ -12,14 +12,14 @@ Use this skill when the user asks to create, repair, validate, or explain a Teko
 2. Generate a JSON object or JSON array that can be uploaded to `/bulk-import`.
 3. Use only the supported event types, block types, enums, and field shapes described below.
 4. Validate JSON before returning it.
-5. Tell the user which media placeholders must be replaced with media UUIDs from the target app.
+5. Tell the user which media placeholders must be replaced: `thumbnailId` needs a media UUID, while render media can use a media UUID or direct URL.
 
 ## Critical Rules
 
 - Output valid JSON only inside fenced `json` blocks when providing import data.
 - Theme `name` must be unique. Duplicate names are skipped on import.
-- Media fields must be UUID media IDs from the target app: `thumbnailId`, `imageId`, `backgroundImageId`, `audioId`.
-- Do not use direct URLs for media unless the target renderer has been customized to support them.
+- `thumbnailId` must be omitted/undefined or a UUID media ID from the target app; direct URLs are not supported for thumbnails.
+- `imageId`, `backgroundImageId`, and `audioId` must be media refs: either UUID media IDs from the target app or direct `http(s)` URLs.
 - Do not put bank accounts, e-wallets, gift items, or transfer confirmations in theme JSON. `donation` and `gift` blocks use runtime invitation dashboard data.
 - Dates must be ISO strings.
 - Required top-level fields: `name`, `type`, `ornaments`, `blocks`, `content`.
@@ -50,7 +50,7 @@ Every event type should include required blocks: `hero`, `events`, `footer`.
   "styles": {},
   "openingConfig": {},
   "navigationConfig": {},
-  "sound": { "audioId": "REPLACE_WITH_AUDIO_MEDIA_UUID" },
+  "sound": { "audioId": "REPLACE_WITH_AUDIO_MEDIA_UUID_OR_URL" },
   "ornaments": [],
   "blocks": [],
   "content": { "events": [] }
@@ -108,6 +108,8 @@ Optional `entranceAnimation`:
 - `easing`: `ease`, `ease-out`, `spring`, `bounce`
 
 ## Block Content Shapes
+
+Any field named `imageId`, `backgroundImageId`, or `audioId` is a media ref: either a target-app media UUID or direct `http(s)` URL. `thumbnailId` is UUID-only or omitted.
 
 - `hero`: `imageId?`, `title`, `description?`, `showEventDate`, `showCountdown`
 - `couple`: `layout`, `showNickname`, `showSosmed`, `showParent`, `imageShape`, `dividerType`, `dividerText?`, `showCard`
@@ -171,7 +173,7 @@ Events:
 - Navigation links scroll to block IDs.
 - Opening screen renders if `openingConfig` exists.
 - Audio renders if `sound.audioId` exists.
-- Images/audio use `/api/media/{id}` in the target app.
+- Images/audio use media refs: UUIDs resolve through `/api/media/{id}`, and direct URLs are used as-is.
 - `donation`, `gift`, `rsvp`, and `comment` use runtime invitation APIs/data beyond the theme JSON.
 
 ## Final Checklist

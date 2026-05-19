@@ -13,7 +13,7 @@ This skill creates portable Tekole/Bahagiaku theme JSON that can be uploaded thr
    - Event type: `wedding`, `engagement`, `anniversary`, `birthday`, `aqiqah`, `sunatan`, `wisuda`, or `party`.
    - Visual direction: palette, typography mood, ornament style, layout density, opening screen mood.
    - Blocks to include, but only use blocks allowed for the event type.
-   - Media IDs available in the target app instance.
+   - Media refs available as target-app UUIDs or direct URLs.
 2. Read the relevant bundled references:
    - Always read `references/theme-json-contract.md` before generating JSON.
    - Read `references/enums.md` when choosing event type, blocks, layout, animation, navigation, or ornament values.
@@ -29,15 +29,15 @@ This skill creates portable Tekole/Bahagiaku theme JSON that can be uploaded thr
    - `blocks[].id` must be stable and unique.
    - `navigationConfig.items[].targetBlockId` must match an existing block ID.
    - `maps.content.linkedEventId` and `countdown.content.linkedEventId` must match `content.events[].id`.
-   - Media fields must use media UUIDs from the target app instance.
+   - Media fields must use supported media refs: `thumbnailId` is UUID-only or omitted; `imageId`, `backgroundImageId`, and `audioId` accept target-app UUIDs or direct media URLs.
 
 ## Important Rules
 
 - Do not invent unsupported fields unless the user explicitly wants forward-compatible notes outside the JSON.
 - Do not put bank accounts, e-wallets, gift items, or transfer confirmations inside theme JSON. Donation and gift render from invitation-specific dashboard data.
 - Use ISO date strings in JSON for all dates.
-- Use UUID media IDs for `thumbnailId`, `imageId`, `backgroundImageId`, and `audioId`. The current renderer builds media URLs as `/api/media/{id}`.
-- If media IDs are unknown, use placeholders like `"REPLACE_WITH_MEDIA_UUID"` and explain they must be replaced before import/render.
+- Use a target-app UUID or omit `thumbnailId`. Use media refs for `imageId`, `backgroundImageId`, and `audioId`: either target-app UUIDs or direct `http(s)` URLs.
+- If media refs are unknown, use `"REPLACE_WITH_MEDIA_UUID"` for `thumbnailId` and placeholders like `"REPLACE_WITH_MEDIA_UUID_OR_URL"` for render media, then explain they must be replaced before import/render.
 - Keep `status` as `"draft"` unless the user explicitly wants `"published"`.
 - Keep theme names descriptive and unique, for example `"Rustic Garden Wedding 01"`.
 
@@ -45,7 +45,7 @@ This skill creates portable Tekole/Bahagiaku theme JSON that can be uploaded thr
 
 When asked to create a theme, provide:
 
-1. A short note listing assumptions and required media replacements.
+1. A short note listing assumptions and required media ref replacements.
 2. A fenced `json` block containing the import-ready object or array.
 3. A brief checklist of what was validated.
 

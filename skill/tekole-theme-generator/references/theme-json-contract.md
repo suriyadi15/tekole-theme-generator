@@ -15,7 +15,7 @@ Required by import validation:
 Optional:
 
 - `description?: string`
-- `thumbnailId?: string` - UUID media ID.
+- `thumbnailId?: string` - target-app media UUID only; omit when unavailable. Direct URLs are not supported for thumbnails.
 - `status?: "draft" | "published" | "archived"` - defaults to `draft`.
 - `styles?: ThemeStyle`
 - `openingConfig?: OpeningConfig`
@@ -82,7 +82,7 @@ Opening screen appears before the invitation content when `openingConfig` exists
 
 ```json
 {
-  "backgroundImageId": "REPLACE_WITH_MEDIA_UUID",
+  "backgroundImageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
   "overlayColor": "#000000",
   "overlayOpacity": 0.45,
   "eventLabel": "Undangan Pernikahan",
@@ -101,7 +101,7 @@ Opening screen appears before the invitation content when `openingConfig` exists
 
 Fields:
 
-- `backgroundImageId?: string` - media UUID.
+- `backgroundImageId?: string` - `MediaRef`.
 - `overlayColor?: string | null` - null/no value means no overlay.
 - `overlayOpacity: number` - 0 to 1.
 - `eventLabel?: string`
@@ -137,13 +137,17 @@ Fields:
 - `items[].label: string`
 - `items[].targetBlockId: string` - must match a block `id`.
 
+## MediaRef
+
+Media fields except `thumbnailId` use a string `MediaRef`: either a media UUID from the target app or an absolute direct `http://` or `https://` URL. When a UUID is used, the target app resolves it through `/api/media/{id}`; when a direct URL is used, the URL is used as-is. `thumbnailId` is UUID-only or omitted.
+
 ## Sound
 
 ```json
-{ "audioId": "REPLACE_WITH_AUDIO_MEDIA_UUID" }
+{ "audioId": "REPLACE_WITH_AUDIO_MEDIA_UUID_OR_URL" }
 ```
 
-If `audioId` is omitted or empty, audio controls do not render. Current renderer uses `/api/media/{audioId}`.
+If `audioId` is omitted or empty, audio controls do not render.
 
 ## OrnamentConfig
 
@@ -153,7 +157,7 @@ Used by both top-level `ornaments` and `blocks[].ornaments`.
 {
   "id": "orn-top-left",
   "isVisible": true,
-  "imageId": "REPLACE_WITH_MEDIA_UUID",
+  "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
   "positionMode": "fixed",
   "positionPreset": "top-left",
   "positionX": "0px",
@@ -176,7 +180,7 @@ Fields:
 
 - `id: string`
 - `isVisible: boolean`
-- `imageId?: string` - media UUID.
+- `imageId?: string` - `MediaRef`.
 - `positionMode?: "fixed" | "absolute"` - fixed follows viewport, absolute follows page/block.
 - `positionPreset: PositionId`
 - `positionX?: CSSValue`
@@ -258,7 +262,7 @@ Controls the inner content container inside a block section.
   "paddingTop": 64,
   "paddingBottom": 64,
   "paddingX": 24,
-  "backgroundImageId": "REPLACE_WITH_MEDIA_UUID",
+  "backgroundImageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
   "backgroundColor": null,
   "backgroundOverlayColor": "#000000",
   "backgroundOverlayOpacity": 0.25,
@@ -272,7 +276,7 @@ Fields:
 - `paddingTop: number` - px.
 - `paddingBottom: number` - px.
 - `paddingX: number` - px.
-- `backgroundImageId?: string` - media UUID.
+- `backgroundImageId?: string` - `MediaRef`.
 - `backgroundColor?: string | null`
 - `backgroundOverlayColor?: string | null`
 - `backgroundOverlayOpacity: number` - 0 to 1.
@@ -299,7 +303,7 @@ Global content shared by blocks.
     "person1": {
       "fullName": "Budi Santoso",
       "nickname": "Budi",
-      "imageId": "REPLACE_WITH_MEDIA_UUID",
+      "imageId": "REPLACE_WITH_MEDIA_UUID_OR_URL",
       "fatherName": "H. Santoso",
       "motherName": "Hj. Rahayu",
       "childOrder": 1,
@@ -377,6 +381,8 @@ Fields:
 If `useGlobalLocation` is true, event location resolves from `content.globalLocation`.
 
 ## Block Content Shapes
+
+Any block or content field named `imageId`, `backgroundImageId`, or `audioId` uses `MediaRef`.
 
 ### hero
 
