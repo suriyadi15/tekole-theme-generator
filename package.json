@@ -1,0 +1,25 @@
+{
+  "name": "tekole-theme-generator",
+  "version": "1.0.0",
+  "description": "Installer for the Tekole/Bahagiaku theme generator skill for Codex, Claude, and generic agents.",
+  "type": "module",
+  "bin": {
+    "tekole-theme-generator": "bin/install.js"
+  },
+  "files": [
+    "bin",
+    "skill",
+    "adapters",
+    "README.md"
+  ],
+  "keywords": [
+    "codex",
+    "claude",
+    "agent",
+    "skill",
+    "theme-generator",
+    "bahagiaku",
+    "tekole"
+  ],
+  "license": "MIT"
+}

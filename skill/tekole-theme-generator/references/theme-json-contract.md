@@ -1,0 +1,536 @@
+# Bahagiaku Theme JSON Contract
+
+This is the portable contract for admin theme bulk import. The import endpoint accepts either a single theme object or an array of theme objects. Maximum batch size is 50.
+
+## Top-Level Theme Object
+
+Required by import validation:
+
+- `name: string` - required, 1-255 chars, unique. Duplicate names are skipped.
+- `type: EventTypeKey` - required event type.
+- `ornaments: OrnamentConfig[]` - required array; use `[]` if none.
+- `blocks: ThemeInvitationBlock[]` - required array.
+- `content: InvitationContent` - required global event/person content.
+
+Optional:
+
+- `description?: string`
+- `thumbnailId?: string` - UUID media ID.
+- `status?: "draft" | "published" | "archived"` - defaults to `draft`.
+- `styles?: ThemeStyle`
+- `openingConfig?: OpeningConfig`
+- `navigationConfig?: NavigationConfig`
+- `sound?: { audioId?: string }`
+
+Do not include DB-managed fields in import JSON: `id`, `createdBy`, `createdAt`, `updatedAt`.
+
+## ThemeStyle
+
+`styles` controls global CSS variables used by all invitation renderers.
+
+```json
+{
+  "typography": {
+    "fontHeading": "Playfair Display",
+    "fontBody": "Plus Jakarta Sans",
+    "fontAccent": "Great Vibes",
+    "sizeBase": 1,
+    "scaleRatio": 1.25
+  },
+  "colors": {
+    "primary": "#8B5E3C",
+    "accent": "#C9A96E",
+    "background": "#FDFAF6",
+    "surface": "#F5EFE7",
+    "text": "#3D2B1F",
+    "textMuted": "#8A7060",
+    "textInvert": "#FDFAF6",
+    "border": "#E8DDD3"
+  },
+  "spacing": { "base": 1 },
+  "button": {
+    "borderRadius": "9999px",
+    "paddingX": 2,
+    "paddingY": 0.625,
+    "fontWeight": 500,
+    "letterSpacing": 0.05,
+    "textTransform": "uppercase",
+    "variant": "filled"
+  },
+  "borderRadius": 0.5
+}
+```
+
+Field notes:
+
+- `fontHeading`, `fontBody`, `fontAccent`: font family names. Non-system fonts are loaded from Google Fonts by family name.
+- `sizeBase`: rem number; typical `0.9` to `1.15`.
+- `scaleRatio`: typography scale; typical `1.15` to `1.35`.
+- Color fields: hex or valid CSS color strings.
+- `spacing.base`: rem number used to calculate default block spacing.
+- `button.borderRadius`: `"9999px"` for pill or a CSS value like `"0.5rem"`.
+- `button.paddingX`, `button.paddingY`: rem numbers.
+- `button.fontWeight`: number, typically 400-700.
+- `button.letterSpacing`: em number.
+- `button.textTransform`: `none`, `uppercase`, or `capitalize`.
+- `button.variant`: `filled`, `outline`, or `ghost`.
+- `borderRadius`: rem number used by cards/containers.
+
+## OpeningConfig
+
+Opening screen appears before the invitation content when `openingConfig` exists.
+
+```json
+{
+  "backgroundImageId": "REPLACE_WITH_MEDIA_UUID",
+  "overlayColor": "#000000",
+  "overlayOpacity": 0.45,
+  "eventLabel": "Undangan Pernikahan",
+  "title": "Budi & Sari",
+  "subtitle": "Kami mengundang kehadiran Anda",
+  "guestNote": "*Mohon maaf jika ada kesalahan penulisan nama",
+  "buttonText": "Buka Undangan",
+  "animation": {
+    "backgroundEffect": "kenburns-in",
+    "textEffect": "fade-in",
+    "duration": 800
+  },
+  "invertText": true
+}
+```
+
+Fields:
+
+- `backgroundImageId?: string` - media UUID.
+- `overlayColor?: string | null` - null/no value means no overlay.
+- `overlayOpacity: number` - 0 to 1.
+- `eventLabel?: string`
+- `title: string`
+- `subtitle?: string`
+- `guestNote?: string` - shown only when opened with guest data.
+- `buttonText: string`
+- `animation.backgroundEffect?: BackgroundEffectId | null`
+- `animation.textEffect?: AnimationId | null`
+- `animation.duration?: number | null` - ms.
+- `invertText: boolean` - use `textInvert` color on opening screen.
+
+## NavigationConfig
+
+```json
+{
+  "isEnabled": true,
+  "position": "bottom",
+  "style": "bar",
+  "items": [
+    { "id": "nav-hero", "label": "Home", "targetBlockId": "block-hero" }
+  ]
+}
+```
+
+Fields:
+
+- `isEnabled: boolean`
+- `position: "top" | "bottom" | "floating-bottom" | "floating-side"`
+- `style: "bar" | "dots" | "hamburger"`
+- `items: NavigationItem[]`
+- `items[].id: string`
+- `items[].label: string`
+- `items[].targetBlockId: string` - must match a block `id`.
+
+## Sound
+
+```json
+{ "audioId": "REPLACE_WITH_AUDIO_MEDIA_UUID" }
+```
+
+If `audioId` is omitted or empty, audio controls do not render. Current renderer uses `/api/media/{audioId}`.
+
+## OrnamentConfig
+
+Used by both top-level `ornaments` and `blocks[].ornaments`.
+
+```json
+{
+  "id": "orn-top-left",
+  "isVisible": true,
+  "imageId": "REPLACE_WITH_MEDIA_UUID",
+  "positionMode": "fixed",
+  "positionPreset": "top-left",
+  "positionX": "0px",
+  "positionY": "0px",
+  "width": "140px",
+  "height": "140px",
+  "zLayer": "above",
+  "opacity": 0.8,
+  "rotation": 0,
+  "flipX": false,
+  "flipY": false,
+  "animation": "float",
+  "animationOrigin": "center center",
+  "speed": 4000,
+  "delay": 0
+}
+```
+
+Fields:
+
+- `id: string`
+- `isVisible: boolean`
+- `imageId?: string` - media UUID.
+- `positionMode?: "fixed" | "absolute"` - fixed follows viewport, absolute follows page/block.
+- `positionPreset: PositionId`
+- `positionX?: CSSValue`
+- `positionY?: CSSValue`
+- `width: CSSValue`
+- `height: CSSValue`
+- `zLayer: "above" | "below"`
+- `opacity?: number` - 0 to 1.
+- `rotation?: number` - degrees.
+- `flipX?: boolean`
+- `flipY?: boolean`
+- `animation?: OrnamentAnimationId`
+- `animationOrigin?: AnimationOriginPosition`
+- `speed?: number` - ms per cycle.
+- `delay?: number` - ms.
+
+`CSSValue` examples: `"120px"`, `"20%"`, `"8rem"`, `"10vw"`, `"auto"`, `"fit-content"`.
+
+## Block Base Fields
+
+Every block object has:
+
+- `id: string` - unique and stable; used as section anchor.
+- `type: BlockType`
+- `order: number` - sorted ascending.
+- `isVisible: boolean`
+- `visibility: "always" | "public_only" | "guests_only"`
+- `content: object` - shape depends on `type`.
+- `styles?: ThemeInvitationBlockStyle`
+- `containerConfig?: ContainerConfig`
+- `ornaments?: OrnamentConfig[]`
+- `entranceAnimation?: EntranceAnimation`
+
+Example:
+
+```json
+{
+  "id": "block-events",
+  "type": "events",
+  "order": 3,
+  "isVisible": true,
+  "visibility": "always",
+  "content": {
+    "title": "Rangkaian Acara",
+    "description": "Kami menantikan kehadiran Anda",
+    "layout": "card",
+    "showAddToCalendar": true,
+    "showMapsButton": true
+  }
+}
+```
+
+## ThemeInvitationBlockStyle
+
+Per-block visual override. All fields optional.
+
+- `headingColor?: ThemeColorValue`
+- `headingFont?: ThemeFontValue`
+- `bodyColor?: ThemeColorValue`
+- `bodyFont?: ThemeFontValue`
+- `accentColor?: ThemeColorValue`
+- `align?: "left" | "center" | "right"`
+- `paddingTop?: number` - rem; resolved to px.
+- `paddingBottom?: number` - rem; resolved to px.
+- `gap?: number` - rem; resolved to px.
+- `backgroundColor?: ThemeColorValue | null` - token, CSS color, or CSS gradient.
+
+`ThemeColorValue` can be a color token (`primary`, `accent`, `background`, `surface`, `text`, `textMuted`, `textInvert`, `border`) or any CSS color/gradient string.
+
+`ThemeFontValue` can be a font token (`fontHeading`, `fontBody`, `fontAccent`) or a font family string.
+
+## ContainerConfig
+
+Controls the inner content container inside a block section.
+
+```json
+{
+  "width": "md",
+  "paddingTop": 64,
+  "paddingBottom": 64,
+  "paddingX": 24,
+  "backgroundImageId": "REPLACE_WITH_MEDIA_UUID",
+  "backgroundColor": null,
+  "backgroundOverlayColor": "#000000",
+  "backgroundOverlayOpacity": 0.25,
+  "minHeight": 520
+}
+```
+
+Fields:
+
+- `width: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full"`
+- `paddingTop: number` - px.
+- `paddingBottom: number` - px.
+- `paddingX: number` - px.
+- `backgroundImageId?: string` - media UUID.
+- `backgroundColor?: string | null`
+- `backgroundOverlayColor?: string | null`
+- `backgroundOverlayOpacity: number` - 0 to 1.
+- `minHeight?: number` - px.
+
+Defaults if omitted: width `full`, `paddingTop` 64, `paddingBottom` 64, `paddingX` 24, overlay opacity 0.
+
+## EntranceAnimation
+
+- `type: "none" | "fadeIn" | "fadeInUp" | "fadeInDown" | "fadeInLeft" | "fadeInRight" | "zoomIn" | "slideIn"`
+- `duration: number` - ms.
+- `delay: number` - ms.
+- `easing: "ease" | "ease-out" | "spring" | "bounce"`
+
+Default if omitted: `fadeInUp`, 600 ms, delay 0, `ease-out`.
+
+## InvitationContent
+
+Global content shared by blocks.
+
+```json
+{
+  "couple": {
+    "person1": {
+      "fullName": "Budi Santoso",
+      "nickname": "Budi",
+      "imageId": "REPLACE_WITH_MEDIA_UUID",
+      "fatherName": "H. Santoso",
+      "motherName": "Hj. Rahayu",
+      "childOrder": 1,
+      "sosmed": [
+        { "platform": "instagram", "url": "https://instagram.com/example", "username": "@example" }
+      ]
+    },
+    "person2": {}
+  },
+  "events": []
+}
+```
+
+Fields:
+
+- `couple?: { person1?: CouplePerson, person2?: CouplePerson }` - used by wedding, engagement, anniversary.
+- `celebrant?: CelebrantPerson[]` - used by birthday, aqiqah, sunatan, wisuda.
+- `host?: HostPerson[]` - used by party/gathering.
+- `events: EventItem[]` - required for all event types.
+- `globalLocation?: EventLocation`
+
+`CouplePerson`:
+
+- `fullName: string`
+- `nickname: string`
+- `imageId?: string`
+- `fatherName?: string`
+- `motherName?: string`
+- `childOrder?: number`
+- `sosmed: PersonSosmed[]`
+
+`CelebrantPerson`:
+
+- `id: string`
+- `fullName: string`
+- `nickname: string`
+- `imageId?: string`
+- `birthDate?: string` - ISO date string.
+- `fatherName?: string`
+- `motherName?: string`
+- `sosmed: PersonSosmed[]`
+
+`HostPerson`:
+
+- `id: string`
+- `name: string`
+- `title?: string`
+- `imageId?: string`
+- `description?: string`
+
+`PersonSosmed`:
+
+- `platform: "instagram" | "tiktok" | "twitter" | "facebook" | "youtube"`
+- `url: string`
+- `username: string`
+
+`EventLocation`:
+
+- `locationName?: string`
+- `address?: string`
+- `latLong?: string` - example `"-6.210357,106.852341"`.
+- `city?: string`
+
+`EventItem`:
+
+- `id: string`
+- `title: string`
+- `description?: string`
+- `fromDate: string` - ISO datetime string.
+- `toDate: string` - ISO datetime string.
+- `isPrimary: boolean`
+- `useGlobalLocation?: boolean`
+- `location?: EventLocation`
+
+If `useGlobalLocation` is true, event location resolves from `content.globalLocation`.
+
+## Block Content Shapes
+
+### hero
+
+- `imageId?: string`
+- `title: string`
+- `description?: string`
+- `showEventDate: boolean`
+- `showCountdown: boolean`
+
+### couple
+
+- `layout: "sideBySide" | "stacked" | "overlap" | "centered"`
+- `showNickname: boolean`
+- `showSosmed: boolean`
+- `showParent: boolean`
+- `imageShape: "circle" | "square" | "rounded" | "diamond"`
+- `dividerType: "ampersand" | "line" | "text" | "none"`
+- `dividerText?: string`
+- `showCard: boolean`
+
+### celebrant
+
+- `layout: "centered" | "card" | "split"`
+- `showAge: boolean`
+- `showBirthDate: boolean`
+- `showParent: boolean`
+- `caption?: string`
+
+### host
+
+- `layout: "centered" | "card" | "list"`
+- `showDescription: boolean`
+
+### loveStory
+
+- `title: string`
+- `description?: string`
+- `layout: "timeline" | "cards" | "minimal"`
+- `items: LoveStoryItem[]`
+
+`LoveStoryItem`:
+
+- `id: string`
+- `date: string` - ISO date string.
+- `title: string`
+- `description: string`
+- `imageId?: string`
+
+### events
+
+- `title: string`
+- `description?: string`
+- `layout: "card" | "timeline" | "list"`
+- `showAddToCalendar: boolean`
+- `showMapsButton: boolean`
+
+### gallery
+
+- `title: string`
+- `description?: string`
+- `layout: "grid" | "masonry" | "slider" | "polaroid"`
+- `aspectRatio?: "1:1" | "16:9" | "9:16" | "4:3" | "3:4" | "free"`
+- `objectFit?: "cover" | "contain" | "fill"`
+- `items: GalleryItem[]`
+
+`GalleryItem`:
+
+- `id: string`
+- `imageId?: string`
+- `caption?: string`
+
+### maps
+
+- `title: string`
+- `description?: string`
+- `linkedEventId: string`
+- `showDirectionButton: boolean`
+- `buttonText: string`
+
+### rsvp
+
+- `title: string`
+- `description?: string`
+
+### donation
+
+- `title: string`
+- `description?: string`
+- `showCopyButton: boolean`
+
+Do not include payment accounts in theme JSON.
+
+### gift
+
+- `title: string`
+- `description?: string`
+- `showProgress: boolean`
+- `showPurchaseLink: boolean`
+
+Do not include gift items in theme JSON.
+
+### video
+
+- `title: string`
+- `description?: string`
+- `layout: "featured" | "grid" | "carousel"`
+- `items: VideoItem[]`
+
+`VideoItem`:
+
+- `id: string`
+- `title: string`
+- `youtubeUrl: string`
+
+### dresscode
+
+- `title: string`
+- `description?: string`
+- `colorPalette: DresscodeColor[]`
+- `imageId?: string`
+- `notes?: string`
+
+`DresscodeColor`:
+
+- `id: string`
+- `colorHex: string`
+- `label: string`
+
+### quotes
+
+- `text: string`
+- `source?: string`
+- `style: "blockquote" | "card" | "minimal"`
+- `showDivider: boolean`
+
+### countdown
+
+- `title?: string`
+- `linkedEventId: string`
+- `style: "flip" | "minimal" | "circle" | "boxed"`
+
+### comment
+
+- `title: string`
+- `description?: string`
+
+### footer
+
+- `text?: string`
+- `showSosmed: boolean`
+- `sosmedLinks: FooterSosmedLink[]`
+- `backgroundImageId?: string`
+
+`FooterSosmedLink`:
+
+- `platform: "instagram" | "tiktok" | "twitter" | "facebook" | "youtube"`
+- `url: string`

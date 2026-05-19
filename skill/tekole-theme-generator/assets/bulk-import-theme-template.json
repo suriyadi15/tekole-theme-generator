@@ -1,0 +1,395 @@
+[
+  {
+    "name": "Portable Wedding Garden 01",
+    "description": "Tema wedding garden elegan. Ganti semua REPLACE_WITH_MEDIA_UUID dengan UUID media dari aplikasi tujuan sebelum import.",
+    "type": "wedding",
+    "status": "draft",
+    "thumbnailId": "REPLACE_WITH_MEDIA_UUID",
+    "styles": {
+      "typography": {
+        "fontHeading": "Playfair Display",
+        "fontBody": "Plus Jakarta Sans",
+        "fontAccent": "Great Vibes",
+        "sizeBase": 1,
+        "scaleRatio": 1.25
+      },
+      "colors": {
+        "primary": "#6F4E37",
+        "accent": "#B88A44",
+        "background": "#FBF8F2",
+        "surface": "#F0E8DC",
+        "text": "#2F241C",
+        "textMuted": "#756357",
+        "textInvert": "#FFF9EF",
+        "border": "#DED0BE"
+      },
+      "spacing": {
+        "base": 1
+      },
+      "button": {
+        "borderRadius": "9999px",
+        "paddingX": 2,
+        "paddingY": 0.625,
+        "fontWeight": 600,
+        "letterSpacing": 0.04,
+        "textTransform": "uppercase",
+        "variant": "filled"
+      },
+      "borderRadius": 0.75
+    },
+    "openingConfig": {
+      "backgroundImageId": "REPLACE_WITH_MEDIA_UUID",
+      "overlayColor": "#2F241C",
+      "overlayOpacity": 0.48,
+      "eventLabel": "Undangan Pernikahan",
+      "title": "Budi & Sari",
+      "subtitle": "Kami mengundang kehadiran Anda",
+      "guestNote": "*Mohon maaf apabila ada kesalahan penulisan nama atau gelar",
+      "buttonText": "Buka Undangan",
+      "animation": {
+        "backgroundEffect": "kenburns-in",
+        "textEffect": "fade-in",
+        "duration": 800
+      },
+      "invertText": true
+    },
+    "navigationConfig": {
+      "isEnabled": true,
+      "position": "bottom",
+      "style": "bar",
+      "items": [
+        {
+          "id": "nav-couple",
+          "label": "Mempelai",
+          "targetBlockId": "block-couple"
+        },
+        {
+          "id": "nav-events",
+          "label": "Acara",
+          "targetBlockId": "block-events"
+        },
+        {
+          "id": "nav-gallery",
+          "label": "Galeri",
+          "targetBlockId": "block-gallery"
+        },
+        {
+          "id": "nav-rsvp",
+          "label": "RSVP",
+          "targetBlockId": "block-rsvp"
+        }
+      ]
+    },
+    "sound": {
+      "audioId": "REPLACE_WITH_AUDIO_MEDIA_UUID"
+    },
+    "ornaments": [
+      {
+        "id": "orn-global-top-left",
+        "isVisible": true,
+        "imageId": "REPLACE_WITH_MEDIA_UUID",
+        "positionMode": "fixed",
+        "positionPreset": "top-left",
+        "positionX": "0px",
+        "positionY": "0px",
+        "width": "140px",
+        "height": "140px",
+        "zLayer": "above",
+        "opacity": 0.75,
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false,
+        "animation": "float",
+        "animationOrigin": "center center",
+        "speed": 4200,
+        "delay": 0
+      }
+    ],
+    "blocks": [
+      {
+        "id": "block-hero",
+        "type": "hero",
+        "order": 1,
+        "isVisible": true,
+        "visibility": "always",
+        "content": {
+          "imageId": "REPLACE_WITH_MEDIA_UUID",
+          "title": "Budi & Sari",
+          "description": "Dengan penuh rasa syukur, kami mengundang Anda untuk hadir di hari bahagia kami.",
+          "showEventDate": true,
+          "showCountdown": true
+        },
+        "styles": {
+          "headingColor": "textInvert",
+          "headingFont": "fontAccent",
+          "bodyColor": "textInvert",
+          "bodyFont": "fontBody",
+          "accentColor": "accent",
+          "align": "center",
+          "paddingTop": 4,
+          "paddingBottom": 4,
+          "gap": 1.25,
+          "backgroundColor": "#2F241C"
+        },
+        "containerConfig": {
+          "width": "full",
+          "paddingTop": 96,
+          "paddingBottom": 96,
+          "paddingX": 24,
+          "backgroundImageId": "REPLACE_WITH_MEDIA_UUID",
+          "backgroundColor": null,
+          "backgroundOverlayColor": "#000000",
+          "backgroundOverlayOpacity": 0.35,
+          "minHeight": 640
+        },
+        "entranceAnimation": {
+          "type": "fadeInUp",
+          "duration": 700,
+          "delay": 0,
+          "easing": "ease-out"
+        },
+        "ornaments": []
+      },
+      {
+        "id": "block-quotes",
+        "type": "quotes",
+        "order": 2,
+        "isVisible": true,
+        "visibility": "always",
+        "content": {
+          "text": "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri.",
+          "source": "QS. Ar-Rum: 21",
+          "style": "blockquote",
+          "showDivider": true
+        },
+        "styles": {
+          "align": "center",
+          "backgroundColor": "surface"
+        },
+        "containerConfig": {
+          "width": "sm",
+          "paddingTop": 56,
+          "paddingBottom": 56,
+          "paddingX": 24,
+          "backgroundColor": null,
+          "backgroundOverlayColor": null,
+          "backgroundOverlayOpacity": 0
+        }
+      },
+      {
+        "id": "block-couple",
+        "type": "couple",
+        "order": 3,
+        "isVisible": true,
+        "visibility": "always",
+        "content": {
+          "layout": "sideBySide",
+          "showNickname": true,
+          "showSosmed": true,
+          "showParent": true,
+          "imageShape": "circle",
+          "dividerType": "ampersand",
+          "dividerText": "&",
+          "showCard": true
+        },
+        "containerConfig": {
+          "width": "md",
+          "paddingTop": 64,
+          "paddingBottom": 64,
+          "paddingX": 24,
+          "backgroundColor": null,
+          "backgroundOverlayColor": null,
+          "backgroundOverlayOpacity": 0
+        }
+      },
+      {
+        "id": "block-events",
+        "type": "events",
+        "order": 4,
+        "isVisible": true,
+        "visibility": "always",
+        "content": {
+          "title": "Rangkaian Acara",
+          "description": "Merupakan kehormatan bagi kami apabila Anda berkenan hadir.",
+          "layout": "card",
+          "showAddToCalendar": true,
+          "showMapsButton": true
+        },
+        "containerConfig": {
+          "width": "md",
+          "paddingTop": 64,
+          "paddingBottom": 64,
+          "paddingX": 24,
+          "backgroundColor": "#FBF8F2",
+          "backgroundOverlayColor": null,
+          "backgroundOverlayOpacity": 0
+        }
+      },
+      {
+        "id": "block-gallery",
+        "type": "gallery",
+        "order": 5,
+        "isVisible": true,
+        "visibility": "always",
+        "content": {
+          "title": "Galeri",
+          "description": "Beberapa momen yang menjadi bagian dari cerita kami.",
+          "layout": "grid",
+          "aspectRatio": "1:1",
+          "objectFit": "cover",
+          "items": [
+            {
+              "id": "gallery-1",
+              "imageId": "REPLACE_WITH_MEDIA_UUID",
+              "caption": "Momen pertama"
+            },
+            {
+              "id": "gallery-2",
+              "imageId": "REPLACE_WITH_MEDIA_UUID",
+              "caption": "Hari bahagia"
+            }
+          ]
+        },
+        "containerConfig": {
+          "width": "lg",
+          "paddingTop": 64,
+          "paddingBottom": 64,
+          "paddingX": 24,
+          "backgroundColor": null,
+          "backgroundOverlayColor": null,
+          "backgroundOverlayOpacity": 0
+        }
+      },
+      {
+        "id": "block-maps",
+        "type": "maps",
+        "order": 6,
+        "isVisible": true,
+        "visibility": "always",
+        "content": {
+          "title": "Lokasi Acara",
+          "description": "Silakan gunakan tombol petunjuk arah untuk menuju lokasi.",
+          "linkedEventId": "event-akad",
+          "showDirectionButton": true,
+          "buttonText": "Buka Google Maps"
+        },
+        "containerConfig": {
+          "width": "md",
+          "paddingTop": 56,
+          "paddingBottom": 56,
+          "paddingX": 24,
+          "backgroundColor": "#F0E8DC",
+          "backgroundOverlayColor": null,
+          "backgroundOverlayOpacity": 0
+        }
+      },
+      {
+        "id": "block-rsvp",
+        "type": "rsvp",
+        "order": 7,
+        "isVisible": true,
+        "visibility": "always",
+        "content": {
+          "title": "Konfirmasi Kehadiran",
+          "description": "Kehadiran dan doa restu Anda sangat berarti bagi kami."
+        },
+        "containerConfig": {
+          "width": "sm",
+          "paddingTop": 64,
+          "paddingBottom": 64,
+          "paddingX": 24,
+          "backgroundColor": null,
+          "backgroundOverlayColor": null,
+          "backgroundOverlayOpacity": 0
+        }
+      },
+      {
+        "id": "block-footer",
+        "type": "footer",
+        "order": 8,
+        "isVisible": true,
+        "visibility": "always",
+        "content": {
+          "text": "Terima kasih atas doa dan kehadiran Anda.\nBudi & Sari",
+          "showSosmed": true,
+          "sosmedLinks": [
+            {
+              "platform": "instagram",
+              "url": "https://instagram.com/example"
+            }
+          ],
+          "backgroundImageId": "REPLACE_WITH_MEDIA_UUID"
+        },
+        "containerConfig": {
+          "width": "full",
+          "paddingTop": 48,
+          "paddingBottom": 80,
+          "paddingX": 24,
+          "backgroundColor": null,
+          "backgroundOverlayColor": null,
+          "backgroundOverlayOpacity": 0
+        }
+      }
+    ],
+    "content": {
+      "couple": {
+        "person1": {
+          "fullName": "Budi Santoso",
+          "nickname": "Budi",
+          "imageId": "REPLACE_WITH_MEDIA_UUID",
+          "fatherName": "Bapak Santoso",
+          "motherName": "Ibu Rahayu",
+          "childOrder": 1,
+          "sosmed": [
+            {
+              "platform": "instagram",
+              "url": "https://instagram.com/example",
+              "username": "@budi"
+            }
+          ]
+        },
+        "person2": {
+          "fullName": "Sari Dewi",
+          "nickname": "Sari",
+          "imageId": "REPLACE_WITH_MEDIA_UUID",
+          "fatherName": "Bapak Purwanto",
+          "motherName": "Ibu Siti",
+          "childOrder": 2,
+          "sosmed": [
+            {
+              "platform": "instagram",
+              "url": "https://instagram.com/example",
+              "username": "@sari"
+            }
+          ]
+        }
+      },
+      "events": [
+        {
+          "id": "event-akad",
+          "title": "Akad Nikah",
+          "description": "Prosesi ijab kabul",
+          "fromDate": "2026-06-20T09:00:00.000Z",
+          "toDate": "2026-06-20T11:00:00.000Z",
+          "isPrimary": true,
+          "useGlobalLocation": true
+        },
+        {
+          "id": "event-resepsi",
+          "title": "Resepsi",
+          "description": "Makan siang bersama keluarga dan kerabat",
+          "fromDate": "2026-06-20T12:00:00.000Z",
+          "toDate": "2026-06-20T15:00:00.000Z",
+          "isPrimary": false,
+          "useGlobalLocation": true
+        }
+      ],
+      "globalLocation": {
+        "locationName": "Gedung Serbaguna Bahagia",
+        "address": "Jl. Contoh No. 123",
+        "latLong": "-6.210357,106.852341",
+        "city": "Jakarta"
+      }
+    }
+  }
+]
