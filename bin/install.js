@@ -84,7 +84,6 @@ function targetHome(agent, options, agents) {
 
 function targetPath(agent, options, agents) {
   const home = targetHome(agent, options, agents)
-  if (agent === "claude") return path.join(home, "skills", `${PACKAGE_NAME}.md`)
   return path.join(home, "skills", PACKAGE_NAME)
 }
 
@@ -99,7 +98,7 @@ function validateSource(agent) {
 function validateDeleteTarget(target) {
   const normalized = path.normalize(target)
   const base = path.basename(normalized)
-  if (base !== PACKAGE_NAME && base !== `${PACKAGE_NAME}.md`) {
+  if (base !== PACKAGE_NAME) {
     fail(`Refusing to delete unexpected path: ${target}`)
   }
 }
@@ -111,23 +110,6 @@ function copySource(agent, source, target, dryRun) {
   fs.cpSync(source, target, { recursive: true })
 }
 
-function buildClaudeContent(skillDir) {
-  const parts = [fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8")]
-  const refsDir = path.join(skillDir, "references")
-  if (fs.existsSync(refsDir)) {
-    for (const f of fs.readdirSync(refsDir).sort()) {
-      parts.push(fs.readFileSync(path.join(refsDir, f), "utf8"))
-    }
-  }
-  return parts.join("\n\n---\n\n")
-}
-
-function installClaude(skillDir, target, dryRun) {
-  log(`Install claude: ${skillDir} -> ${target} (combined)`)
-  if (dryRun) return
-  fs.mkdirSync(path.dirname(target), { recursive: true })
-  fs.writeFileSync(target, buildClaudeContent(skillDir), "utf8")
-}
 
 function installOne(agent, command, options, agents) {
   validateSource(agent)
@@ -148,11 +130,7 @@ function installOne(agent, command, options, agents) {
     }
   }
 
-  if (agent === "claude") {
-    installClaude(source, target, options.dryRun)
-  } else {
-    copySource(agent, source, target, options.dryRun)
-  }
+  copySource(agent, source, target, options.dryRun)
 }
 
 function uninstallOne(agent, options, agents) {
@@ -190,7 +168,7 @@ Options:
 
 Default install paths (--agent all installs codex + claude only):
   Codex:   $CODEX_HOME/skills/tekole-theme-generator or ~/.codex/skills/tekole-theme-generator
-  Claude:  $CLAUDE_HOME/skills/tekole-theme-generator.md or ~/.claude/skills/tekole-theme-generator.md
+  Claude:  $CLAUDE_HOME/skills/tekole-theme-generator/ or ~/.claude/skills/tekole-theme-generator/
   Generic: $AGENTS_HOME/skills/tekole-theme-generator or ~/.agents/skills/tekole-theme-generator
            (excluded from "all" to prevent duplicate skill listings — use --agent generic explicitly)
 `)
